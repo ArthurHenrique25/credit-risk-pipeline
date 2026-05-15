@@ -1,5 +1,5 @@
 import pandas as pd
-from database import get_engine
+from src.database import get_engine
 
 def load_data(df, path):
     print("Carregando no MySQL...")

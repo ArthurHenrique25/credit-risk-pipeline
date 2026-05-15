@@ -15,7 +15,9 @@ def transform_data(df: pd.DataFrame) -> pd.DataFrame:
         df["uso_limite"] * 0.3 -
         (df["renda_liquida"] / 10000) * 0.2
     )
-
+    print("Quantidade de linhas:", len(df))
+    print(df.head())
     return df
+   
 
 print(f"Transformando dados")

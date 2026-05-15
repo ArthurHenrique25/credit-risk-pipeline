@@ -1,21 +1,26 @@
-from extract import extract_data
-from transform import transform_data
-from load import load_data
-from logger import logger
+from src.extract import extract_data
+from src.transform import transform_data
+from src.load import load_data
+from src.logger import setup_logger
+
+logger = setup_logger()
 
 def run_pipeline():
-    logger.info("Pipeline iniciado")
+    try:
+        logger.info("🚀 Pipeline iniciado")
 
-    df = extract_data("data/raw/clientes.csv")
-    logger.info(f"Dados extraídos: {len(df)} linhas")
+        df = extract_data()
+        logger.info(f"Dados extraídos: {len(df)} linhas")
 
-    df_transformed = transform_data(df)
-    logger.info("Transformação concluída")
+        df_transformed = transform_data(df)
+        logger.info("Transformação concluída")
 
-    load_data(df_transformed)
-    logger.info("Dados carregados no MySQL")
+        load_data(df_transformed, "data/processed/clientes_tratados.csv")
+        logger.info("Carga no MySQL concluída")
 
-    logger.info("Pipeline finalizado com sucesso")
-    
-if __name__ == "__main__":
-    run_pipeline()
+        logger.info("✅ Pipeline finalizado com sucesso")
+
+    except Exception as e:
+        logger.error(f"❌ Erro no pipeline: {e}")
+
+run_pipeline()
