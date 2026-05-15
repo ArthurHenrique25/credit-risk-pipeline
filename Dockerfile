@@ -2,8 +2,7 @@ FROM python:3.11
 
 WORKDIR /app
 
-COPY . .
+COPY scripts/ scripts/
+RUN pip install pandas mysql-connector-python
 
-RUN pip install -r requirements.txt
-
-CMD ["python", "test_db.py"]
+CMD ["python", "scripts/extract.py"]

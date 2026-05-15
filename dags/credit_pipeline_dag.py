@@ -3,15 +3,25 @@ from airflow.operators.bash import BashOperator
 from datetime import datetime
 
 with DAG(
-    dag_id="credit_risk_pipeline",
-    start_date=datetime(2024,1,1),
+    dag_id="pipeline_credito_etl",
+    start_date=datetime(2024, 1, 1),
     schedule_interval="@daily",
-    catchup=False
+    catchup=False,
 ) as dag:
 
-    run_pipeline = BashOperator(
-        task_id="run_credit_pipeline",
-        bash_command="python /app/test_db.py"
+    extract = BashOperator(
+        task_id="extract",
+        bash_command="docker compose run --rm credit-pipeline python scripts/extract.py"
     )
 
-    run_pipeline
+    transform = BashOperator(
+        task_id="transform",
+        bash_command="docker compose run --rm credit-pipeline python scripts/transform.py"
+    )
+
+    load = BashOperator(
+        task_id="load",
+        bash_command="docker compose run --rm credit-pipeline python scripts/load.py"
+    )
+
+    extract >> transform >> load
